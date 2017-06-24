@@ -5,12 +5,12 @@ extern crate gtk;
 #[macro_use]
 mod utils;
 
-use gtk::{BoxExt};
+use gtk::{Align, BoxExt};
 use gtk::prelude::*;
 use gtk::Orientation::{Horizontal, Vertical};
 
-const X_SPACING: i32 = 10;
-const Y_SPACING: i32 = 10;
+const X_SPACING: i32 = 30;
+const Y_SPACING: i32 = 30;
 
 struct Node {
     text: String,
@@ -24,7 +24,11 @@ impl Node {
     
     fn to_mind_map(&self) -> gtk::Box {
         let hbox = gtk::Box::new(Horizontal, X_SPACING);
-        hbox.add(&gtk::Label::new(Some(self.text.as_ref())));
+        
+        let lbl = gtk::Label::new(Some(self.text.as_ref()));
+        lbl.set_valign(Align::Center);
+        
+        hbox.add(&lbl);
         
         let vbox = gtk::Box::new(Vertical, Y_SPACING);
         
@@ -42,7 +46,8 @@ impl Node {
 fn get_sample_tree() -> Node {
     let sample = Node::new("Root node".to_string(), vec![
         Node::new("Child node 1".to_string(), vec![
-            Node::new("Child node 1.1".to_string(), vec![])
+            Node::new("Child node 1.1".to_string(), vec![]),
+            Node::new("Child node 1.2".to_string(), vec![])
         ]),
         Node::new("Child node 2".to_string(), vec![]),
     ]);
@@ -58,6 +63,7 @@ fn main() {
     }
     
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
+    let scrolled_window = gtk::ScrolledWindow::new(None, None);
     
     window.set_title("Mindforge");
     
@@ -66,10 +72,19 @@ fn main() {
        Inhibit(false)
     });
     
+    let vbox = gtk::Box::new(Vertical, Y_SPACING);
     let node = get_sample_tree();
     
-    window.add(&node.to_mind_map());
+    vbox.add(&node.to_mind_map());
     
+    vbox.set_valign(Align::Center);
+    vbox.set_halign(Align::Center);
+    
+    scrolled_window.add(&vbox);
+    
+    window.add(&scrolled_window);
+    window.set_default_size(600, 400);
+    // window.maximize();
     window.show_all();
     gtk::main();
 }
