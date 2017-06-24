@@ -1,0 +1,8 @@
+[package]
+name = "mind_forge_gtkrs"
+version = "0.1.0"
+authors = ["Sandeep Datta <datta.sandeep@gmail.com>"]
+
+[dependencies]
+gtk = "^0"
+cairo-rs = "^0"
